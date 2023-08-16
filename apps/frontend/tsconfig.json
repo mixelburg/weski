@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowJs": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "types": [
+      "vite/client",
+      "vitest"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@weski/util": [
+        "../../libs/util/src/index.ts"
+      ],
+      "@weski/types": [
+        "../../libs/types/src/index.ts"
+      ],
+      "@weski/config": [
+        "../../libs/config/src/index.ts"
+      ],
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ],
+  "extends": "../../tsconfig.base.json"
+}

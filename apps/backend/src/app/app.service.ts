@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common'
+import { APP_VERSION } from '@weski/config';
+import { HealthCheckResponse } from '@weski/types';
 
 @Injectable()
 export class AppService {
-  getData(): { message: string } {
-    return { message: 'Hello API' }
+  async health(): Promise<HealthCheckResponse> {
+    return {
+      version: APP_VERSION,
+      database: { ok: true },
+    }
   }
 }

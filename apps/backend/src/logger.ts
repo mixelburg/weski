@@ -1,10 +1,10 @@
 import { createSyslogFormatter, levelToSyslog } from 'winston-syslog-formatter'
 import { createLogger, format, transports } from 'winston'
+import { APP_VERSION } from '@weski/config';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'debug'
 const APP_NAME = process.env.APP_NAME || 'backend'
 const HOST = process.env.HOST || 'localhost'
-const version = '1.0.0'
 
 const logger = createLogger({
   levels: levelToSyslog,
@@ -16,7 +16,7 @@ const logger = createLogger({
       facility: 20,
       appName: APP_NAME,
       host: HOST,
-      version,
+      version: APP_VERSION,
     }),
   ),
   transports: [new transports.Console()],

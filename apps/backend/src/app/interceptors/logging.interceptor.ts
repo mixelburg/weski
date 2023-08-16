@@ -16,7 +16,7 @@ const shouldMute = (context: ExecutionContext) => {
 }
 
 @Injectable()
-class LoggingInterceptor<T> implements NestInterceptor<T> {
+export class LoggingInterceptor<T> implements NestInterceptor<T> {
   intercept(context: ExecutionContext, next: CallHandler): Observable<T> {
     const { body, method, url } = context.switchToHttp().getRequest()
 
