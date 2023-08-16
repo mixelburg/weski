@@ -1,3 +1,7 @@
-export function util(): string {
-  return 'util'
+export const joinUrl = (...parts: (string | number)[]) => {
+  const joined = parts.join('/')
+
+  // Replace any occurrence of multiple slashes (except after "http://" or "https://")
+  return joined.replace(/([^:]\/)\/+/g, '$1')
 }
+
