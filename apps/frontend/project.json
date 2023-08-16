@@ -4,6 +4,12 @@
   "sourceRoot": "apps/frontend/src",
   "projectType": "application",
   "targets": {
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/frontend && tsc"
+      }
+    },
     "build": {
       "executor": "@nx/vite:build",
       "outputs": [

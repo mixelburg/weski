@@ -7,13 +7,7 @@ import * as fs from 'fs'
 import logger from './logger'
 import { join } from 'path'
 
-const sslFolder = process.env.SSL_FOLDER_PATH || '../../../'
-console.log(
-  'join',
-  __dirname,
-  join(sslFolder, '.cert/cert.pem'),
-  fs.existsSync(join(sslFolder, '.cert/cert.pem')),
-)
+const sslFolder = process.env.SSL_FOLDER_PATH || '.'
 const httpsConfig = fs.existsSync(join(sslFolder, '.cert/cert.pem'))
   ? {
       key: fs.readFileSync(join(sslFolder, '.cert/key.pem')),
