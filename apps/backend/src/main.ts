@@ -1,35 +1,74 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app/app.module'
-
-// setup env
-import { config } from 'dotenv'
+import cookieParser from 'cookie-parser'
+import * as bodyParser from 'body-parser'
+import { NextFunction, Request, Response } from 'express'
+import * as fs from 'fs'
 import logger from './logger'
-import { prisma } from './app/prisma/client';
+import { join } from 'path'
 
-config()
+const sslFolder = process.env.SSL_FOLDER_PATH || '../../../'
+console.log(
+  'join',
+  __dirname,
+  join(sslFolder, '.cert/cert.pem'),
+  fs.existsSync(join(sslFolder, '.cert/cert.pem')),
+)
+const httpsConfig = fs.existsSync(join(sslFolder, '.cert/cert.pem'))
+  ? {
+      key: fs.readFileSync(join(sslFolder, '.cert/key.pem')),
+      cert: fs.readFileSync(join(sslFolder, '.cert/cert.pem')),
+    }
+  : undefined
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
-  const globalPrefix = 'api'
-  app.setGlobalPrefix(globalPrefix)
+  const app = await NestFactory.create(AppModule, {
+    bodyParser: true,
+    cors: {
+      origin: (origin, callback) => {
+        callback(null, true)
+      },
+      credentials: true,
+    },
+    httpsOptions: httpsConfig,
+  })
   const port = process.env.PORT || 3000
-  await app.listen(port)
-  logger.debug(
-    `backend is running on: http://127.0.0.1:${port}/${globalPrefix}`,
-  )
+  const globalPrefix = 'api'
 
-  for (const signal of ['SIGTERM', 'SIGINT']) {
-    process.on(signal, async () => {
-      await prisma.$disconnect()
-      await app.close()
-      process.exit()
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    res.set({
+      'Access-Control-Allow-Origin': req.headers.origin,
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+      'Access-Control-Allow-Credentials': 'true',
     })
-  }
+    next()
+  })
+  app.use(bodyParser.json({ limit: '100mb' }))
+  app.use(
+    bodyParser.urlencoded({
+      limit: '100mb',
+      extended: false,
+      parameterLimit: 50000,
+    }),
+  )
+  app.use(cookieParser())
+  app.setGlobalPrefix(globalPrefix)
+
+  await app.listen(port, '0.0.0.0')
+
+  const protocol = httpsConfig ? 'https' : 'http'
+
+  logger.debug(
+    `listening at ${protocol}://localhost:` + port + '/' + globalPrefix,
+  )
 }
 
 bootstrap()
+  .then(() => {
+    logger.debug(`[+] server listening`)
+  })
+  .catch((err: any) => {
+    console.error(err)
+  })
