@@ -1,3 +1,5 @@
+import {v4 as uuidv4} from 'uuid'
+
 export const joinUrl = (...parts: (string | number)[]) => {
   const joined = parts.join('/')
 
@@ -5,3 +7,5 @@ export const joinUrl = (...parts: (string | number)[]) => {
   return joined.replace(/([^:]\/)\/+/g, '$1')
 }
 
+
+export const generateId = () => uuidv4()

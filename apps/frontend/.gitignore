@@ -46,8 +46,6 @@ Thumbs.db
 # all .env files
 **/.env
 
-**/.cert
-
 
 ssh_key.txt
 

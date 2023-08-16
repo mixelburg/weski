@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { joinUrl } from '@weski/util'
-import { HealthCheckResponse } from '@weski/types';
+import {HealthCheckResponse, QueryHotelsResponse, RequestHotelsBatch, SkiQuery} from '@weski/types';
 
-const baseUrl = import.meta.env.VITE_API_URL
+const baseUrl = import.meta.env.VITE_API_URL || 'https://127.0.0.1:3000'
 
 function dateReviver(key: string, value: any) {
   // This regex matches date strings in the format: YYYY-MM-DDTHH:mm:ss.sssZ
@@ -34,6 +34,8 @@ const axiosInstance = axios.create(axiosConfig)
 
 const apiService = {
   health: async (): Promise<HealthCheckResponse> => (await axiosInstance.get('health')).data,
+  queryHotels: async (data: SkiQuery): Promise<QueryHotelsResponse> => (await axiosInstance.post('', data)).data,
+  getBatch: async (id: string): Promise<RequestHotelsBatch> => (await axiosInstance.get(id)).data,
 }
 
 export default apiService

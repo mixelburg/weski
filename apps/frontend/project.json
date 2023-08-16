@@ -15,6 +15,12 @@
       "outputs": [
         "{options.outputPath}"
       ],
+      "dependsOn": [
+        {
+          "target": "type-check",
+          "projects": "frontend"
+        }
+      ],
       "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/frontend"
