@@ -20,7 +20,15 @@ npm install -g pnpm
 npm install
 ```
 
-4. run the project
+4. create .env file in the root directory
+
+```shell
+touch .env
+
+echo "HOTELS_SIMULATOR_URL='https://gya7b1xubh.execute-api.eu-west-2.amazonaws.com/default/HotelsSimulator'" >> .env
+```
+
+5. run the project
 
 ```shell
 nx serve backend
